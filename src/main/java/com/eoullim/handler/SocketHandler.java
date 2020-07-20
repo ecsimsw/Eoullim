@@ -1,5 +1,6 @@
 package com.eoullim.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,41 +11,43 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
+@Slf4j
 @Component
 public class SocketHandler extends TextWebSocketHandler {
 
-    // session.getId(), session
-    HashMap<String, WebSocketSession> sessionMap = new HashMap<>(); //웹소켓 세션을 담아둘 맵
+    private List<WebSocketSession> sessions = new LinkedList<>();
 
-    private static final Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) {
-        //sending message
-        String msg = message.getPayload();
-        for(String key : sessionMap.keySet()){
-            WebSocketSession wss = sessionMap.get(key);
-            try{
-                wss.sendMessage(new TextMessage(msg));
-                logger.info(session.toString() + "  : " + msg);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        log.info("메세지 전송 = {} : {}",session,message.getPayload());
+        for(WebSocketSession sess : sessions){
+            TextMessage msg = new TextMessage(message.getPayload());
+            sess.sendMessage(msg);
         }
+
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         //socket connecting
+        log.info("connected : "+session);
+
         super.afterConnectionEstablished(session);
-        sessionMap.put(session.getId(), session);
+
+        sessions.add(session);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         //socket closing
-        sessionMap.remove(session.getId());
-        super.afterConnectionClosed(session,status);
+        log.info("disConnected : "+session);
+
+        super.afterConnectionClosed(session, status);
+
+        sessions.remove(session);
     }
 }

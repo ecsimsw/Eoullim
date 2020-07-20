@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MainController {
     @RequestMapping("/chat")
     public String chatTest(Model model){
-        return "chatTest";
+        return "chatBaseFormat";
     }
 }
