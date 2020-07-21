@@ -21,7 +21,6 @@ public class SocketHandler extends TextWebSocketHandler {
     // TextMessage -> JSON {roomId : "id", type : "TYPE", sender : "sender"}
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        log.info("send = {} : {}",session,message.getPayload());  // <<<< Use only in Test >>>>
         chatRoomService.sendMessage(session, message);
     }
 }

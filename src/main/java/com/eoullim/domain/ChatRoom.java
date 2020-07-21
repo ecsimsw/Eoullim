@@ -2,11 +2,8 @@ package com.eoullim.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -14,6 +11,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Slf4j
 @Getter @Setter
 public class ChatRoom {
     private Long roomId;
@@ -57,7 +55,7 @@ public class ChatRoom {
 
             if (memberSession.size() < 1) {roomStatus =-1;}
         }
-        else{ chatMessage.setMessage(chatMessage.getSender() + " : " + chatMessage.getMessage()); }
+        else{ chatMessage.setMessage(chatMessage.getSender() + " : " + chatMessage.getMessage());}
 
         send(chatMessage);
         return roomStatus;
@@ -68,6 +66,7 @@ public class ChatRoom {
 
         for(WebSocketSession session : memberSession){
             session.sendMessage(textMessage);
+            // Send a WebSocket message: either TextMessage or BinaryMessage.
         }
     }
 }
