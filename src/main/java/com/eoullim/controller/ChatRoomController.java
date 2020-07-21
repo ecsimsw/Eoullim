@@ -3,6 +3,7 @@ package com.eoullim.controller;
 import com.eoullim.domain.ChatRoom;
 import com.eoullim.domain.ChatRoomForm;
 import com.eoullim.repository.ChatRoomRepository;
+import com.eoullim.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,32 +14,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @RequiredArgsConstructor
 public class ChatRoomController {
-    private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomService chatRoomService;
 
-    @GetMapping("/")
+    @GetMapping("/chat/rooms")
     public String rooms(Model model){
-        model.addAttribute("rooms",chatRoomRepository.findAllRoom());
+        model.addAttribute("rooms",chatRoomService.getAllchatRooms());
         return "rooms";
     }
 
-    @GetMapping("/rooms/{id}")
+    @GetMapping("/chat/room/{id}")
     public String room(@PathVariable String id, Model model){
-        ChatRoom room = chatRoomRepository.findRoomById(Long.parseLong(id));
+        ChatRoom room = chatRoomService.getChatRoomById(Long.parseLong(id));
         model.addAttribute("room",room);
         return "room";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/chat/rooms/new")
     public String make(Model model){
-        ChatRoomForm form = new ChatRoomForm();
-        model.addAttribute("form",form);
+        model.addAttribute("form",new ChatRoomForm());
         return "newRoom";
     }
 
-    @PostMapping("/room/new")
+    @PostMapping("/chat/rooms/new")
     public String makeRoom(ChatRoomForm form){
-        chatRoomRepository.createChatRoom(form.getName());
-
-        return "redirect:/";
+        chatRoomService.createChatRoom(form.getName());
+        return "redirect:/chat/rooms";
     }
 }

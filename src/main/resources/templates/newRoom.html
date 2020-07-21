@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset = UTF-8" />
-    <title>채팅 서비스</title>
+    <title>어울림</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -19,13 +19,13 @@
 
 <div class="container">
 
-    <form class="form-signing" action="/room/new" th:object="${form}" method= "post">
+    <form class="form-signing" action="/chat/rooms/new" th:object="${form}" method= "post">
         <h2 class="form-signing-heading">새로운 채팅방 생성</h2>
         <label for="title" class="sr-only">채팅방 이름</label>
         <input type="text" th:field="*{name}" id="title" class="form-control" placeholder="채팅방 이름을 입력해주세요" required autofocus>
         <br>
         <button class="btn btn-primary" type="submit">생성하기</button>
-        <button class="btn btn-danger" onclick = "location.href='/'">돌아가기</button>
+        <button class="btn btn-danger" onclick = "location.href='/chat/rooms'">돌아가기</button>
     </form>
 
 </div> <!-- /container -->

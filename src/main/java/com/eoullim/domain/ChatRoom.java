@@ -9,25 +9,26 @@ import org.springframework.web.socket.WebSocketSession;
 import java.awt.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 @Getter @Setter
 public class ChatRoom {
     private Long roomId;
     private String name;
-    private Set<WebSocketSession> sessions = new HashSet<>();
+    private Set<WebSocketSession> memberSession = new HashSet<>();
 
     private static Long makeRoomId(){
         Long hash =0L;
         Date currentTime = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat( "yyyyMMddHHmmss", Locale.KOREA );
         hash += Long.parseLong(formatter.format ( currentTime ));
+        long rand = (long)(Math.random()*100);
+        hash += rand;
         return hash;
     }
 
+    // 이게 왜 static 이지.
+    // error: non-static method create(String) cannot be referenced from a static context
     public static ChatRoom create(String name){
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.roomId = makeRoomId();
@@ -37,11 +38,11 @@ public class ChatRoom {
 
     public void handleMessage(WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
         if(chatMessage.getType() == MessageType.ENTER){
-            sessions.add(session);
+            memberSession.add(session);
             chatMessage.setMessage("Entered : "+chatMessage.getSender());
         }
         else if(chatMessage.getType() == MessageType.LEAVE){
-            sessions.remove(session);
+            memberSession.remove(session);
             chatMessage.setMessage("Left : "+chatMessage.getSender());
         }
         else{
@@ -53,8 +54,8 @@ public class ChatRoom {
     private void send(ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
 
-        for(WebSocketSession s : sessions){
-            s.sendMessage(textMessage);
+        for(WebSocketSession session : memberSession){
+            session.sendMessage(textMessage);
         }
     }
 }

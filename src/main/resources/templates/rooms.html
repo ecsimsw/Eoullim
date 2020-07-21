@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset = UTF-8" />
-    <title>채팅 서비스</title>
+    <title>어울림</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -31,12 +31,12 @@
             <td th:text="${room.roomId}"></td>
             <td th:text="${room.name}"></td>
             <td>
-                <a class = "btn btn-primary" th:href = "@{/rooms/{id} (id = ${room.roomId})}"></a>
+                <a class = "btn btn-primary" th:href = "@{/chat/room/{id} (id = ${room.roomId})}"></a>
             </td>
         </tr>
         </tbody>
     </table>
-    <a class = "btn btn-primary pull-right" href = "/new">새로 만들기</a>
+    <a class = "btn btn-primary pull-right" href = "/chat/rooms/new">새로 만들기</a>
 </div>
 
 
