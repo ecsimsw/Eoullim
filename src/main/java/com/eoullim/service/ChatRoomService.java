@@ -14,14 +14,13 @@ import org.springframework.web.socket.WebSocketSession;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
-    private final ObjectMapper objMapper;
+    private final ObjectMapper objMapper;  // 언제, 어떻게 빈으로 등록된거지..
 
     public ChatRoom createChatRoom(String name){
         return chatRoomRepository.save(name);
@@ -40,9 +39,15 @@ public class ChatRoomService {
     public void sendMessage(WebSocketSession session, TextMessage message) throws IOException {
         String msg = message.getPayload();
         ChatMessage chatMessage = objMapper.readValue(msg, ChatMessage.class);
-        log.info(objMapper.toString());
-        log.info(String.valueOf(objMapper == null));
-        ChatRoom chatRoom = chatRoomRepository.findRoomById(chatMessage.getRoomId());
-        chatRoom.handleMessage(session,chatMessage);
+
+        Long roomId = chatMessage.getRoomId();
+        ChatRoom chatRoom = chatRoomRepository.findRoomById(roomId);
+
+        if(chatRoom.handleMessage(session,chatMessage) == -1)
+            deleteChatRoom(roomId);
+    }
+
+    public void deleteChatRoom(Long roomId){
+        chatRoomRepository.delete(roomId);
     }
 }

@@ -20,9 +20,11 @@ public class ChatRoom {
     private String name;
     private Set<WebSocketSession> memberSession = new HashSet<>();
 
+    /*
     // 왜 주입 못 받지..
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
+    */
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private static Long makeRoomId(){
         Long hash =0L;
@@ -42,18 +44,23 @@ public class ChatRoom {
         return chatRoom;
     }
 
-    public void handleMessage(WebSocketSession session, ChatMessage chatMessage) throws IOException {
+    public int handleMessage(WebSocketSession session, ChatMessage chatMessage) throws IOException {
+        int roomStatus = 0;  // -1 : End Room
+
         if(chatMessage.getType() == MessageType.ENTER){
             memberSession.add(session);
             chatMessage.setMessage("Entered : "+chatMessage.getSender());
         }
-        else if(chatMessage.getType() == MessageType.LEAVE){
+        else if(chatMessage.getType() == MessageType.LEAVE) {
             memberSession.remove(session);
-            chatMessage.setMessage("Left : "+chatMessage.getSender());
+            chatMessage.setMessage("Left : " + chatMessage.getSender());
+
+            if (memberSession.size() < 1) {roomStatus =-1;}
         }
         else{ chatMessage.setMessage(chatMessage.getSender() + " : " + chatMessage.getMessage()); }
 
         send(chatMessage);
+        return roomStatus;
     }
 
     private void send(ChatMessage chatMessage) throws IOException {

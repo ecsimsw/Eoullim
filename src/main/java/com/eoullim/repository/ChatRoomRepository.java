@@ -1,27 +1,26 @@
 package com.eoullim.repository;
 
 import com.eoullim.domain.ChatRoom;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
-
 import javax.annotation.PostConstruct;
 import java.util.*;
 
+@Slf4j
 @Repository
 public class ChatRoomRepository {
 
     private Map<Long, ChatRoom> chatRoomMap;
-    private List<ChatRoom> chatRooms; // for print chatRooms.
+    private List<ChatRoom> chatRoomList; // for print chatRooms.
 
     @PostConstruct
     private void init(){
         chatRoomMap = new LinkedHashMap<>();
-        chatRooms = new LinkedList<>();
+        chatRoomList = new LinkedList<>();
     }
 
     public List<ChatRoom> findAllRoom(){
-        return chatRooms;
+        return chatRoomList;
     }
 
     public ChatRoom findRoomById(Long id){
@@ -31,7 +30,13 @@ public class ChatRoomRepository {
     public ChatRoom save(String name){
         ChatRoom newChatRoom = ChatRoom.create(name);
         chatRoomMap.put(newChatRoom.getRoomId(), newChatRoom);
-        chatRooms.add(newChatRoom);
+        chatRoomList.add(newChatRoom);
         return newChatRoom;
+    }
+
+    public void delete(Long roomId){
+        ChatRoom deleteChatRoom = this.findRoomById(roomId);
+        chatRoomList.remove(deleteChatRoom);
+        chatRoomMap.remove(roomId);
     }
 }

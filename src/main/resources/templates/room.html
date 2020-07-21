@@ -15,6 +15,8 @@
 
 </head>
 <body>
+<button class = "btn btn-primary" id ="exit">나가기</button>
+
 <input type="text" id="nickname" class="form-inline" placeholder="닉네임을 입력해주세요" required autofocus>
 <button class = "btn btn-primary" id = "name">확인</button>
 <label for="roomId" class="label label-default">방 번호</label>
@@ -44,6 +46,11 @@
     document.getElementById("send").addEventListener("click",function(){
         send();
     })
+    document.getElementById("exit").addEventListener("click",function(){
+        disconnect();
+        location.replace("/chat/rooms");
+    })
+    
     function connect(){
         webSocket = new WebSocket("ws://localhost:8080/eoullimChatServer");
         webSocket.onopen = onOpen;
