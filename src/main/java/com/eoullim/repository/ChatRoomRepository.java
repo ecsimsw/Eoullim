@@ -2,6 +2,8 @@ package com.eoullim.repository;
 
 import com.eoullim.domain.ChatRoom;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -10,14 +12,16 @@ import java.util.*;
 public class ChatRoomRepository {
 
     private Map<Long, ChatRoom> chatRoomMap;
+    private List<ChatRoom> chatRooms; // for print chatRooms.
 
     @PostConstruct
-    private void init(){ chatRoomMap = new LinkedHashMap<>(); }
+    private void init(){
+        chatRoomMap = new LinkedHashMap<>();
+        chatRooms = new LinkedList<>();
+    }
 
     public List<ChatRoom> findAllRoom(){
-        List chatRooms = new ArrayList<>(chatRoomMap.values());
         return chatRooms;
-        // 이 부분 매번 리스트 만들면 성능 떨어질테니까, 다른 방법 고안.
     }
 
     public ChatRoom findRoomById(Long id){
@@ -25,8 +29,9 @@ public class ChatRoomRepository {
     }
 
     public ChatRoom save(String name){
-        ChatRoom chatRoom = ChatRoom.create(name);
-        chatRoomMap.put(chatRoom.getRoomId(), chatRoom);
-        return chatRoom;
+        ChatRoom newChatRoom = ChatRoom.create(name);
+        chatRoomMap.put(newChatRoom.getRoomId(), newChatRoom);
+        chatRooms.add(newChatRoom);
+        return newChatRoom;
     }
 }

@@ -2,11 +2,14 @@ package com.eoullim.domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.awt.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,6 +19,10 @@ public class ChatRoom {
     private Long roomId;
     private String name;
     private Set<WebSocketSession> memberSession = new HashSet<>();
+
+    // 왜 주입 못 받지..
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private static Long makeRoomId(){
         Long hash =0L;
@@ -27,8 +34,7 @@ public class ChatRoom {
         return hash;
     }
 
-    // 이게 왜 static 이지.
-    // error: non-static method create(String) cannot be referenced from a static context
+    // 이게 왜 static 이지. 아 자기 자신을 생성하는구나.
     public static ChatRoom create(String name){
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.roomId = makeRoomId();
@@ -36,7 +42,7 @@ public class ChatRoom {
         return chatRoom;
     }
 
-    public void handleMessage(WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
+    public void handleMessage(WebSocketSession session, ChatMessage chatMessage) throws IOException {
         if(chatMessage.getType() == MessageType.ENTER){
             memberSession.add(session);
             chatMessage.setMessage("Entered : "+chatMessage.getSender());
@@ -45,13 +51,12 @@ public class ChatRoom {
             memberSession.remove(session);
             chatMessage.setMessage("Left : "+chatMessage.getSender());
         }
-        else{
-            chatMessage.setMessage(chatMessage.getSender() + " : " + chatMessage.getMessage());
-        }
-        send(chatMessage,objectMapper);
+        else{ chatMessage.setMessage(chatMessage.getSender() + " : " + chatMessage.getMessage()); }
+
+        send(chatMessage);
     }
 
-    private void send(ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
+    private void send(ChatMessage chatMessage) throws IOException {
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
 
         for(WebSocketSession session : memberSession){

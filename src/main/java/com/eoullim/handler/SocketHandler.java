@@ -3,6 +3,7 @@ package com.eoullim.handler;
 import com.eoullim.domain.ChatMessage;
 import com.eoullim.domain.ChatRoom;
 import com.eoullim.repository.ChatRoomRepository;
+import com.eoullim.service.ChatRoomService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,21 +16,12 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Component
 @RequiredArgsConstructor
 public class SocketHandler extends TextWebSocketHandler {
-
-    private final ChatRoomRepository chatRoomRepository;
-    private final ObjectMapper objMapper;
-    // jackson.ObjectMapper : mapping json to vo
-
+    private final ChatRoomService chatRoomService;
 
     // TextMessage -> JSON {roomId : "id", type : "TYPE", sender : "sender"}
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        log.info("send = {} : {}",session,message.getPayload());
-        // <<<< Only in Test >>>>
-
-        String msg = message.getPayload();
-        ChatMessage chatMessage = objMapper.readValue(msg, ChatMessage.class);
-        ChatRoom chatRoom = chatRoomRepository.findRoomById(chatMessage.getRoomId());
-        chatRoom.handleMessage(session,chatMessage,objMapper);
+        log.info("send = {} : {}",session,message.getPayload());  // <<<< Use only in Test >>>>
+        chatRoomService.sendMessage(session, message);
     }
 }

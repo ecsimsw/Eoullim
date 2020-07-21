@@ -2,7 +2,6 @@ package com.eoullim.controller;
 
 import com.eoullim.domain.ChatRoom;
 import com.eoullim.domain.ChatRoomForm;
-import com.eoullim.repository.ChatRoomRepository;
 import com.eoullim.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,7 @@ public class ChatRoomController {
 
     @GetMapping("/chat/rooms")
     public String rooms(Model model){
-        model.addAttribute("rooms",chatRoomService.getAllchatRooms());
+        model.addAttribute("rooms",chatRoomService.getAllChatRooms());
         return "rooms";
     }
 
