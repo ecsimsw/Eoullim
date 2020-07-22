@@ -20,7 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
-    private final ObjectMapper objMapper;  // 언제, 어떻게 빈으로 등록된거지..
+    private final ObjectMapper objMapper;
+    // 언제, 어떻게 빈으로 등록된거지.. -> JacksonAutoConfiguration!
 
     public ChatRoom createChatRoom(String name){
         return chatRoomRepository.save(name);
@@ -43,7 +44,7 @@ public class ChatRoomService {
         Long roomId = chatMessage.getRoomId();
         ChatRoom chatRoom = chatRoomRepository.findRoomById(roomId);
 
-        if(chatRoom.handleMessage(session,chatMessage) == -1)
+        if(chatRoom.handleMessage(session,chatMessage, objMapper) == -1)
             deleteChatRoom(roomId);
     }
 

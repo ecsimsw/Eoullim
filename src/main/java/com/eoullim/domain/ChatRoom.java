@@ -19,11 +19,9 @@ public class ChatRoom {
     private Set<WebSocketSession> memberSession = new HashSet<>();
 
     /*
-    // 왜 주입 못 받지..
+    // 왜 주입 못 받지.. -> chatRoom이 런타임 생성이라!! 빈으로 등록 되어야 주입을 받지
     @Autowired private ObjectMapper objectMapper;
     */
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     private static Long makeRoomId(){
         Long hash =0L;
         Date currentTime = new Date();
@@ -42,7 +40,7 @@ public class ChatRoom {
         return chatRoom;
     }
 
-    public int handleMessage(WebSocketSession session, ChatMessage chatMessage) throws IOException {
+    public int handleMessage(WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
         int roomStatus = 0;  // -1 : End Room
 
         if(chatMessage.getType() == MessageType.ENTER){
@@ -57,11 +55,11 @@ public class ChatRoom {
         }
         else{ chatMessage.setMessage(chatMessage.getSender() + " : " + chatMessage.getMessage());}
 
-        send(chatMessage);
+        send(chatMessage, objectMapper);
         return roomStatus;
     }
 
-    private void send(ChatMessage chatMessage) throws IOException {
+    private void send(ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
 
         for(WebSocketSession session : memberSession){
