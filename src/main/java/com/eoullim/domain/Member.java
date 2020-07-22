@@ -21,6 +21,6 @@ public class Member {
     private String loginId;
     private String loginPw;
 
-    @OneToMany(mappedBy = "")
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<Chat> chatRooms = new ArrayList<>();
 }

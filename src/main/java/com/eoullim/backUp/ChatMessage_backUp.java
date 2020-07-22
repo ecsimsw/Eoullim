@@ -1,5 +1,6 @@
-package com.eoullim.domain;
+package com.eoullim.backUp;
 
+import com.eoullim.domain.MessageType;
 import lombok.Getter;
 import lombok.Setter;
 

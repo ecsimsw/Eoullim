@@ -1,10 +1,7 @@
-package com.eoullim.repository;
+package com.eoullim.backUp;
 
-import com.eoullim.domain.ChatRoom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import javax.annotation.PostConstruct;
-import java.util.*;
 
 @Slf4j
 @Repository

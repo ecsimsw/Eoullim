@@ -1,16 +1,15 @@
-package com.eoullim.domain;
+package com.eoullim.backUp;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.eoullim.domain.Chat;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 
 @Entity
@@ -27,7 +26,7 @@ public class ChatRoom {
     @OneToMany(mappedBy = "member")
     private List<Chat> members = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "", cascade = CascadeType.ALL)
     @JoinColumn(name="chat_message_id")
     private List<ChatMessage> chatMessages = new ArrayList<>();
 

@@ -1,4 +1,4 @@
-package com.eoullim.domain;
+package com.eoullim.backUp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
