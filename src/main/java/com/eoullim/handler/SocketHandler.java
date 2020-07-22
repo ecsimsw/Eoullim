@@ -1,10 +1,7 @@
 package com.eoullim.handler;
 
-import com.eoullim.domain.ChatMessage;
 import com.eoullim.domain.ChatRoom;
-import com.eoullim.repository.ChatRoomRepository;
 import com.eoullim.service.ChatRoomService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

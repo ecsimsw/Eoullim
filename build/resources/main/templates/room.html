@@ -77,8 +77,9 @@
     function onMessage(e){
         data = e.data;
         chatroom = document.getElementById("chatroom");
-        data.trim();
         chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
+        
+        // data 형식 -> "sender : message"
     }
     function onClose(){
         disconnect();

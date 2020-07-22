@@ -7,31 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.persistence.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
-@Entity
-@Table(name="chat_room")
+/*
+@Slf4j
 @Getter @Setter
-public class ChatRoom {
-
-    @Id @GeneratedValue
-    @Column(name ="chat_room_id")
-    private Long id;
+public class ChatRoom_backUp {
     private Long roomId;
     private String name;
 
-    @OneToMany(mappedBy = "member")
-    private List<Chat> members = new ArrayList<>();
+    private Set<WebSocketSession> memberSession = new HashSet<>();
 
-    @OneToMany(mappedBy = "", cascade = CascadeType.ALL)
-    @JoinColumn(name="chat_message_id")
-    private List<ChatMessage> chatMessages = new ArrayList<>();
-
-    //private Set<WebSocketSession> memberSession = new HashSet<>();
+    // 왜 주입 못 받지.. -> chatRoom이 런타임 생성이라!! 빈으로 등록 되어야 주입을 받지
+    // @Autowired private ObjectMapper objectMapper;
 
     private static Long makeRoomId(){
         Long hash =0L;
@@ -43,6 +33,7 @@ public class ChatRoom {
         return hash;
     }
 
+    // 이게 왜 static 이지. 아 자기 자신을 생성하는구나.
     public static ChatRoom create(String name){
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.roomId = makeRoomId();
@@ -54,14 +45,14 @@ public class ChatRoom {
         int roomStatus = 0;  // -1 : End Room
 
         if(chatMessage.getType() == MessageType.ENTER){
-            //memberSession.add(session);
+            memberSession.add(session);
             chatMessage.setMessage("Entered : "+chatMessage.getSender());
         }
         else if(chatMessage.getType() == MessageType.LEAVE) {
-            //memberSession.remove(session);
+            memberSession.remove(session);
             chatMessage.setMessage("Left : " + chatMessage.getSender());
 
-            //if (memberSession.size() < 1) {roomStatus =-1;}
+            if (memberSession.size() < 1) {roomStatus =-1;}
         }
         else{ chatMessage.setMessage(chatMessage.getSender() + " : " + chatMessage.getMessage());}
 
@@ -72,9 +63,11 @@ public class ChatRoom {
     private void send(ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
 
-        //for(WebSocketSession session : memberSession){
-//            session.sendMessage(textMessage);
+        for(WebSocketSession session : memberSession){
+            session.sendMessage(textMessage);
             // Send a WebSocket message: either TextMessage or BinaryMessage.
-//        }
+        }
     }
 }
+*/
+
