@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class ChatRoomController {
+public class ChatRoomController_backUp {
 
     /*
     private final ChatRoomService chatRoomService;

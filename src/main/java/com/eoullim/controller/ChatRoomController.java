@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/*
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ChatRoomController {
 
-    /*
+
     private final ChatRoomService chatRoomService;
 
     @GetMapping("/chat/rooms")
@@ -52,5 +54,7 @@ public class ChatRoomController {
         chatRoomService.createChatRoom(form.getName());
         return "redirect:/chat/rooms";
     }
-    */
+
 }
+
+*/

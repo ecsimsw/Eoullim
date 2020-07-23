@@ -1,6 +1,6 @@
 package com.eoullim.repository;
 
-import com.eoullim.domain.Member;
+import com.eoullim.domain.ChatRoom;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,23 +10,20 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TestMemberRepository {
+public class ChatRoomRepositoryTest {
 
-    @Autowired
-    MemberRepository memberRepository;
+    @Autowired ChatRoomRepository chatRoomRepository;
 
     @Test
     @Transactional
     @Rollback(false)
-    public void saveAndFind(){
-        Member m = new Member();
-        m.setName("jinhwan");
-        memberRepository.save(m);
-        Member find = memberRepository.find(m.getId());
-        Assertions.assertThat(find.getId()).isEqualTo(m.getId());
+    public void saveAndFind() {
+        Long savedId = chatRoomRepository.save("test");
+
+       Assertions.assertThat(chatRoomRepository.findById(savedId).getName()).isEqualTo("test");
     }
 }

@@ -10,12 +10,12 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SocketHandler extends TextWebSocketHandler {
-    private final ChatRoomService chatRoomService;
+public class SocketHandler_backUp extends TextWebSocketHandler {
+    private final ChatRoomService_backUp chatRoomServiceBackUp;
 
     // TextMessage -> JSON {roomId : "id", type : "TYPE", sender : "sender"}
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        chatRoomService.sendMessage(session, message);
+       // chatRoomService.sendMessage(session, message);
     }
 }

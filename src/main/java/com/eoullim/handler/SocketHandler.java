@@ -18,6 +18,6 @@ public class SocketHandler extends TextWebSocketHandler {
     // TextMessage -> JSON {roomId : "id", type : "TYPE", sender : "sender"}
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        chatRoomService.sendMessage(session, message);
+        //chatRoomService.sendMessage(session, message);
     }
 }

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ChatRoomService {
-    private final ChatRoomRepository chatRoomRepository;
+public class ChatRoomService_backUp {
+    private final ChatRoomRepository_backUp chatRoomRepositoryBackUp;
 
     /*
     private final ObjectMapper objMapper;

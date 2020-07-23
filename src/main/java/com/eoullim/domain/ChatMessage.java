@@ -23,4 +23,6 @@ public class ChatMessage {
     private MessageType type;
 
     private Long roomId;
+
+    private String date;
 }

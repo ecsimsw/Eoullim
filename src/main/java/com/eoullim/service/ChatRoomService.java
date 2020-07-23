@@ -20,6 +20,8 @@ import java.util.List;
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
 
+
+
     /*
     private final ObjectMapper objMapper;
     // 언제, 어떻게 빈으로 등록된거지.. -> JacksonAutoConfiguration!
