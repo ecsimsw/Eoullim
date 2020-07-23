@@ -16,7 +16,7 @@ public class ChatRoomRepository {
 
     private final EntityManager em;
 
-    public ChatRoom save(String name){
+    public ChatRoom saveNewRoom(String name){
         ChatRoom newChatRoom = ChatRoom.create(name);
         em.persist(newChatRoom);
         return newChatRoom;

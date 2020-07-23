@@ -22,8 +22,7 @@ public class ChatRoom {
     @OneToMany(mappedBy = "member")
     private List<Chat> members = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    //@JoinColumn(name="chat_message_id")
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     //private Set<WebSocketSession> memberSession = new HashSet<>();

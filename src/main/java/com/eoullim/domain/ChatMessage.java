@@ -22,7 +22,9 @@ public class ChatMessage {
     @Enumerated(EnumType.STRING)
     private MessageType type;
 
-    private Long roomId;
+    @ManyToOne
+    @JoinColumn(name="chat_room_id")
+    private ChatRoom chatRoom;
 
     private String date;
 }

@@ -30,14 +30,9 @@ public class ChatMessageRepositoryTest{
         ChatMessage chat4 = new ChatMessage();
         ChatMessage chat5 = new ChatMessage();
 
-        chat1.setRoomId(1L);
-        chat2.setRoomId(1L);
-        chat3.setRoomId(1L);
-        chat4.setRoomId(2L);
-        chat5.setRoomId(3L);
 
         chatMessageRepository.save(chat1);
-       chatMessageRepository.save(chat2);
+        chatMessageRepository.save(chat2);
         chatMessageRepository.save(chat3);
         chatMessageRepository.save(chat4);
         chatMessageRepository.save(chat5);

@@ -2,6 +2,7 @@ package com.eoullim.service;
 
 import com.eoullim.domain.ChatMessage;
 import com.eoullim.domain.ChatRoom;
+import com.eoullim.repository.ChatMessageRepository;
 import com.eoullim.repository.ChatRoomRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
+    public void deleteMessagesInRoom(Long roomId){
 
+    }
 
     /*
     private final ObjectMapper objMapper;

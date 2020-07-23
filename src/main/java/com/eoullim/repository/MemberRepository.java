@@ -12,9 +12,7 @@ public class MemberRepository {
 
     private final EntityManager em;
 
-    public void save(Member m){
-        em.persist(m);
-    }
+    public void save(Member m){ em.persist(m); }
 
     public Member find(Long id){
         return em.find(Member.class, id);

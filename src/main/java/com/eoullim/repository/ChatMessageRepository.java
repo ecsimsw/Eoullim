@@ -29,6 +29,10 @@ public class ChatMessageRepository {
         return messages;
     }
 
+    public void delete(Long id){
+        em.remove(findById(id));
+    }
+
     //public List<ChatMessage> findMessagesByRoomId(Long roomId){}
 
 }
