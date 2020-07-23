@@ -6,12 +6,16 @@ import com.eoullim.domain.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +27,8 @@ public class RepositoryTest {
     @Autowired ChatRoomRepository chatRoomRepository;
     @Autowired MemberRepository memberRepository;
 
+    private static Logger logger = LoggerFactory.getLogger(RepositoryTest.class);
+
     @Test
     @Transactional
     @Rollback(false)
@@ -30,32 +36,26 @@ public class RepositoryTest {
         ChatRoom testChatRoom = chatRoomRepository.saveNewRoom("testChatRoom");
 
         Member testMember = new Member();
+        testMember.setName("jinhwan");
         memberRepository.save(testMember);
 
         ChatMessage msg1 = new ChatMessage();
-        msg1.setChatRoom(testChatRoom);
         msg1.setMessage("입장입니다.");
         msg1.setSender(testMember);
         chatMessageRepository.save(msg1);
+        testChatRoom.addChatMessage(msg1);
 
         ChatMessage msg2 = new ChatMessage();
-        msg2.setChatRoom(testChatRoom);
         msg2.setMessage("test입니다.");
         msg2.setSender(testMember);
         chatMessageRepository.save(msg2);
+        testChatRoom.addChatMessage(msg2);
 
+        ChatRoom findRoom = chatRoomRepository.findById(testChatRoom.getId());
 
-        testChatRoom.getChatMessages().add(msg1);
-        testChatRoom.getChatMessages().add(msg2);
-
-        List<ChatMessage> list = new ArrayList<ChatMessage>();
-        list.add(msg1);
-        testChatRoom.setChatMessages(list);
-
-
-        Assertions.assertThat(chatRoomRepository.findById(testChatRoom.getId()).getMembers().size()).isEqualTo(2);
-
-
+        Assertions.assertThat(findRoom).isEqualTo(testChatRoom);
+        Assertions.assertThat(findRoom.getMembers().size()).isEqualTo(testChatRoom.getMembers().size());
+        logger.info(String.valueOf(findRoom.getChatMessages().size()));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.eoullim.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,10 +23,14 @@ public class ChatRoom {
     @OneToMany(mappedBy = "member")
     private List<Chat> members = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     //private Set<WebSocketSession> memberSession = new HashSet<>();
+
+    public void addChatMessage(ChatMessage chatMessage){
+        chatMessages.add(chatMessage);
+    }
 
     private static Long makeRoomHash(){
         Long hash =0L;
