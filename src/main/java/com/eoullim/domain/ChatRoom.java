@@ -1,14 +1,9 @@
 package com.eoullim.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -21,7 +16,7 @@ public class ChatRoom {
     @Id @GeneratedValue
     @Column(name ="chat_room_id")
     private Long id;
-    private Long roomId;
+    private Long roomHash;
     private String name;
 
     @OneToMany(mappedBy = "member")
@@ -33,7 +28,7 @@ public class ChatRoom {
 
     //private Set<WebSocketSession> memberSession = new HashSet<>();
 
-    private static Long makeRoomId(){
+    private static Long makeRoomHash(){
         Long hash =0L;
         Date currentTime = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat( "yyyyMMddHHmmss", Locale.KOREA );
@@ -45,7 +40,7 @@ public class ChatRoom {
 
     public static ChatRoom create(String name){
         ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomId = makeRoomId();
+        chatRoom.roomHash = makeRoomHash();
         chatRoom.name = name;
         return chatRoom;
     }

@@ -22,8 +22,16 @@ public class ChatRoomRepositoryTest {
     @Transactional
     @Rollback(false)
     public void saveAndFind() {
-        Long savedId = chatRoomRepository.save("test");
+        Long savedRoomHash1 = chatRoomRepository.save("test").getRoomHash();
+        Long savedRoomHash2 = chatRoomRepository.save("test").getRoomHash();
+        Long savedRoomHash3 = chatRoomRepository.save("test").getRoomHash();
 
-       Assertions.assertThat(chatRoomRepository.findById(savedId).getName()).isEqualTo("test");
+        Assertions.assertThat(chatRoomRepository.findRoomByRoomHash(savedRoomHash1).getName()).isEqualTo("test");
+
+        Assertions.assertThat(chatRoomRepository.getAllRooms().size()).isEqualTo(3);
+
+        chatRoomRepository.deleteByRoomHash(savedRoomHash1);
+
+        Assertions.assertThat(chatRoomRepository.getAllRooms().size()).isEqualTo(2);
     }
 }

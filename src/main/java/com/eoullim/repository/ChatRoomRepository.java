@@ -16,14 +16,23 @@ public class ChatRoomRepository {
 
     private final EntityManager em;
 
-    public Long save(String name){
+    public ChatRoom save(String name){
         ChatRoom newChatRoom = ChatRoom.create(name);
         em.persist(newChatRoom);
-        return newChatRoom.getId();
+        return newChatRoom;
     }
 
-    public ChatRoom findById(Long roomId){
-        return em.find(ChatRoom.class, roomId);
+    public ChatRoom findById(Long id){
+        return em.find(ChatRoom.class, id);
+    }
+
+    public ChatRoom findByRoomHash(Long roomHash){
+        List<ChatRoom> findRoom = em.createQuery("Select m from ChatRoom m where m.roomHash= :roomHash", ChatRoom.class)
+                .setParameter("roomHash", roomHash)
+                .getResultList();
+
+        if(findRoom.size()==0) return null;
+        else return findRoom.get(0);  // 동일한 roomHash는 없다고 가정.
     }
 
     public List<ChatRoom> getAllRooms(){
@@ -31,6 +40,16 @@ public class ChatRoomRepository {
                 em.createQuery("Select m from ChatRoom m", ChatRoom.class)
                         .getResultList();
         return rooms;
+    }
+
+    public void deleteById(Long id){
+        ChatRoom deleteOne = this.findById(id);
+        em.remove(deleteOne);
+    }
+
+    public void deleteByRoomHash(Long roomHash){
+        ChatRoom deleteOne = this.findByRoomHash(roomHash);
+        em.remove(deleteOne);
     }
 
     /*
