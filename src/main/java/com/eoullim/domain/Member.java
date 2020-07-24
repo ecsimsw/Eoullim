@@ -21,6 +21,15 @@ public class Member {
     private String loginId;
     private String loginPw;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
-    private List<Chat> chatRooms = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Chat> chats = new ArrayList<>();
+
+    public void addChat(Chat chat){
+        chat.setMember(this);
+        chats.add(chat);
+    }
+
+    public void removeChat(Chat chat){
+        chats.remove(chat);
+    }
 }

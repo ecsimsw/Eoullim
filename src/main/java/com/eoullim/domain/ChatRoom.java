@@ -1,6 +1,5 @@
 package com.eoullim.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,16 +19,28 @@ public class ChatRoom {
     private Long roomHash;
     private String name;
 
-    @OneToMany(mappedBy = "member")
-    private List<Chat> members = new ArrayList<>();
+    @OneToMany(mappedBy = "chatRoom",cascade = CascadeType.ALL)
+    private List<Chat> chats = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="chat_room_id")
     private List<ChatMessage> chatMessages = new ArrayList<>();
-
-    //private Set<WebSocketSession> memberSession = new HashSet<>();
 
     public void addChatMessage(ChatMessage chatMessage){
         chatMessages.add(chatMessage);
+    }
+
+    public void clearChatMessage(){
+        chatMessages.clear();
+    }
+
+    public void addChat(Chat chat){
+        chat.setChatRoom(this);
+        chats.add(chat);
+    }
+
+    public void deleteChat(Chat chat){
+        chats.remove(chat);
     }
 
     private static Long makeRoomHash(){
@@ -48,6 +59,8 @@ public class ChatRoom {
         chatRoom.name = name;
         return chatRoom;
     }
+
+    //private Set<WebSocketSession> memberSession = new HashSet<>();
 
     /*
     public int handleMessage(WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {

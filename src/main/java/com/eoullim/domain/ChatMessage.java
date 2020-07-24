@@ -14,7 +14,6 @@ public class ChatMessage {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "member_id")
     private Member sender;
 
     private String message;
