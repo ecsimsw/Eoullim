@@ -2,6 +2,8 @@ package com.eoullim.service;
 
 import com.eoullim.domain.ChatMessage;
 import com.eoullim.domain.ChatRoom;
+import com.eoullim.domain.Member;
+import com.eoullim.domain.MessageType;
 import com.eoullim.repository.ChatMessageRepository;
 import com.eoullim.repository.ChatRoomRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +24,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
-    private final ChatMessageRepository chatMessageRepository;
 
     public void deleteMessagesInRoom(Long roomId){
 
@@ -39,12 +40,11 @@ public class ChatRoomService {
         return rooms;
     }
 
-    /*
-    private final ObjectMapper objMapper;
-    // 언제, 어떻게 빈으로 등록된거지.. -> JacksonAutoConfiguration!
+    public ChatRoom getChatRoomByHashId(Long hashId){
+        return chatRoomRepository.findByRoomHash(hashId);
+    }
 
-
-
+   /*
     public ChatRoom getChatRoomById(Long roomId){
         return chatRoomRepository.findRoomById(roomId);
     }

@@ -1,5 +1,7 @@
 package com.eoullim.controller;
 
+import com.eoullim.domain.ChatMessage;
+import com.eoullim.domain.ChatRoom;
 import com.eoullim.domain.Member;
 import com.eoullim.form.ChatRoomForm;
 import com.eoullim.form.JoinForm;
@@ -9,10 +11,7 @@ import com.eoullim.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -54,7 +53,7 @@ public class MainController {
 
             return "redirect:/chat/rooms";
         }
-        else {return "redirect:/ERROR";}  // 없는 id 또는 pw 불일치
+        else {return "test/ERROR";}  // 없는 id 또는 pw 불일치
     }
 
     @GetMapping("/logout")
@@ -101,4 +100,13 @@ public class MainController {
         chatRoomService.createChatRoom(form.getName());
         return "redirect:/chat/rooms";
     }
+
+    @GetMapping("/chat/room/{id}")
+    public String enterChatRoom(@PathVariable String id, Model model){
+        ChatRoom room = chatRoomService.getChatRoomByHashId(Long.parseLong(id));
+        model.addAttribute("room",room);
+        return "test/chat/room";
+    }
+
+
 }

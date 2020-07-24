@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>어울림</title>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+ 
+
+
+</head>
+<body>
+내 id : <p th:text="${session.loginMember.loginId}"></p>
+
+<button class = "btn btn-primary" id ="exit">나가기</button>
+<br><br>
+<!--<input type="text" id="nickname" class="form-inline" placeholder="닉네임을 입력해주세요" required autofocus> -->
+<!--<button class = "btn btn-primary" id = "name">확인</button> -->
+
+<label for="roomHash" class="label label-default">방 번호</label>
+<label th:text="*{room.roomHash}" id="roomHash" class="form-inline"></label>
+
+<br>
+<label for="roomName" class="label label-default">방 이름</label>
+<label th:text="*{room.name}" id="roomName" class="form-inline"></label>
+
+<br>
+<label for="roomName" class="label label-default">참여자</label>
+<tr th:each="chat : ${room.chats}">
+    <td th:text="${chat.member.name}"></td>
+</tr>
+
+<div id = "chatroom" style = "width:400px; height: 600px; border:1px solid;"></div>
+<input type = "text" id = "message" style = "height : 30px; width : 340px" placeholder="내용을 입력하세요" autofocus>
+<button class = "btn btn-primary" id = "send">전송</button>
+<script>
+
+</script>
+</body>
+<script th:inline = "javascript">
+    var webSocket;
+    var nickname;
+    /* <![CDATA[*/
+    var roomHash = /*[[${room.roomHash}]]*/;
+    var sender = /*[[${session.loginMember.loginId}]]*/;
+    /* ]]> */
+    
+    
+    alert(sender);
+    connect();
+    
+    document.getElementById("send").addEventListener("click",function(){
+        alert(sender);
+        send();
+    })
+    document.getElementById("message").addEventListener("keypress", function(e){
+		if(e.keyCode == 13){
+			send();
+		}
+	});
+
+
+    function connect(){
+        webSocket = new WebSocket("ws://localhost:8080/eoullimChatServer");
+        webSocket.onopen = onOpen;
+        webSocket.onmessage = onMessage;
+    }
+    function send(){
+        msg = document.getElementById("message").value;
+        webSocket.send(JSON.stringify({roomHash : roomHash, type:'CHAT', sender:sender, message : msg}));
+        document.getElementById("message").value = "";
+    }
+    function onOpen(){
+        webSocket.send(JSON.stringify({roomHash : roomHash,type:'ENTER',sender:sender, message : ""}));
+    }
+    function onMessage(e){
+        data = e.data;
+        chatroom = document.getElementById("chatroom");
+        chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
+
+        // data 형식 -> "sender : message"
+    }
+</script>
+
+</html>

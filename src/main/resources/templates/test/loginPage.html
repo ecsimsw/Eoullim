@@ -19,10 +19,10 @@
         <h2 class="form-signing-heading">로그인</h2>
         <br>
         <label th:for="id">id</label>
-        <input type="text" th:field="*{id}" id="id" class="form-control" placeholder="id을 입력해주세요" required autofocus>
+        <input type="text" th:field="*{id}" id="id" class="form-control" placeholder="id" required autofocus>
         <br>
         <label th:for="pw">pw</label>
-        <input type="text" th:field="*{pw}" id="pw" class="form-control" placeholder="pw을 입력해주세요" required autofocus>
+        <input type="text" th:field="*{pw}" id="pw" class="form-control" placeholder="pw" required autofocus>
         <br>
         <button class="btn btn-primary" type="submit">로그인</button>
         <button class="btn btn-danger" onclick = "location.href='/main'">돌아가기</button>

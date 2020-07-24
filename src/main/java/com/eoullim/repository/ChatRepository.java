@@ -16,6 +16,4 @@ public class ChatRepository {
     public void save(Chat chat){
         em.persist(chat);
     }
-
-
 }

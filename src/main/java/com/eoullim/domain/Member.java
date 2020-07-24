@@ -2,6 +2,7 @@ package com.eoullim.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,4 +33,9 @@ public class Member {
     public void removeChat(Chat chat){
         chats.remove(chat);
     }
+
+
+    //Transient
+    @Transient
+    WebSocketSession webSocketSession;
 }

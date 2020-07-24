@@ -64,14 +64,17 @@ public class ChatRoom {
         return chatRoom;
     }
 
+
     /*
     private Set<WebSocketSession> memberSession = new HashSet<>();
 
-    public int handleMessage(WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
+   public int handleMessage(WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
         int roomStatus = 0;  // -1 : End Room
 
+        Member sender = chatMessage.getSender();
+
         if(chatMessage.getType() == MessageType.ENTER){
-            memberSession.add(session);
+            sender.setWebSocketSession(session);
             chatMessage.setMessage("Entered : "+chatMessage.getSender());
         }
         else if(chatMessage.getType() == MessageType.LEAVE) {
@@ -85,6 +88,7 @@ public class ChatRoom {
         send(chatMessage, objectMapper);
         return roomStatus;
     }
+
 
     private void send(ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));

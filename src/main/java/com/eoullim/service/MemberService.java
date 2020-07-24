@@ -36,4 +36,8 @@ public class MemberService {
         memberRepository.save(newMember);
         return newMember;
     }
+
+    public Member getMemberByLoginId(String loginId){
+        return memberRepository.findByLoginId(loginId);
+    }
 }
