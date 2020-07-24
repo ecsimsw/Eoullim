@@ -1,4 +1,4 @@
-package com.eoullim.domain;
+package com.eoullim.form;
 
 import lombok.Getter;
 import lombok.Setter;

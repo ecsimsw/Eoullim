@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset = UTF-8" />
+    <title>어울림</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <form class="form-signing" action="/join" th:object="${form}" method= "post">
+        <br><br>
+        <h2 class="form-signing-heading">가입</h2>
+        <br>
+        <label th:for="name">name</label>
+        <input type="text" th:field="*{name}" id="name" class="form-control" placeholder="name을 입력해주세요" required autofocus>
+        <br>
+        <label th:for="id">id</label>
+        <input type="text" th:field="*{loginId}" id="id" class="form-control" placeholder="id을 입력해주세요" required autofocus>
+        <br>
+        <label th:for="pw">pw</label>
+        <input type="text" th:field="*{loginPw}" id="pw" class="form-control" placeholder="pw을 입력해주세요" required autofocus>
+        <br>
+        <label th:for="pw">email</label>
+        <input type="text" th:field="*{email}" id="email" class="form-control" placeholder="email을 입력해주세요" required autofocus>
+        <br>
+        <button class="btn btn-primary" type="submit">가입</button>
+        <button class="btn btn-danger" onclick = "location.href='/main'">돌아가기</button>
+    </form>
+
+</div> <!-- /container -->
+
+
+</body>
+</html>

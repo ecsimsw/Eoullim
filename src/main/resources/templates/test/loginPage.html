@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset = UTF-8" />
+    <title>어울림</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <form class="form-signing" action="/login" th:object="${form}" method= "post">
+        <br><br>
+        <h2 class="form-signing-heading">로그인</h2>
+        <br>
+        <label th:for="id">id</label>
+        <input type="text" th:field="*{id}" id="id" class="form-control" placeholder="id을 입력해주세요" required autofocus>
+        <br>
+        <label th:for="pw">pw</label>
+        <input type="text" th:field="*{pw}" id="pw" class="form-control" placeholder="pw을 입력해주세요" required autofocus>
+        <br>
+        <button class="btn btn-primary" type="submit">로그인</button>
+        <button class="btn btn-danger" onclick = "location.href='/main'">돌아가기</button>
+    </form>
+
+</div> <!-- /container -->
+
+
+</body>
+</html>

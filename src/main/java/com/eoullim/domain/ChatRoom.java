@@ -1,9 +1,13 @@
 package com.eoullim.domain;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -60,21 +64,21 @@ public class ChatRoom {
         return chatRoom;
     }
 
-    //private Set<WebSocketSession> memberSession = new HashSet<>();
-
     /*
+    private Set<WebSocketSession> memberSession = new HashSet<>();
+
     public int handleMessage(WebSocketSession session, ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
         int roomStatus = 0;  // -1 : End Room
 
         if(chatMessage.getType() == MessageType.ENTER){
-            //memberSession.add(session);
+            memberSession.add(session);
             chatMessage.setMessage("Entered : "+chatMessage.getSender());
         }
         else if(chatMessage.getType() == MessageType.LEAVE) {
-            //memberSession.remove(session);
+            memberSession.remove(session);
             chatMessage.setMessage("Left : " + chatMessage.getSender());
 
-            //if (memberSession.size() < 1) {roomStatus =-1;}
+            if (memberSession.size() < 1) {roomStatus =-1;}
         }
         else{ chatMessage.setMessage(chatMessage.getSender() + " : " + chatMessage.getMessage());}
 
@@ -85,10 +89,10 @@ public class ChatRoom {
     private void send(ChatMessage chatMessage, ObjectMapper objectMapper) throws IOException {
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
 
-        //for(WebSocketSession session : memberSession){
-//            session.sendMessage(textMessage);
-            // Send a WebSocket message: either TextMessage or BinaryMessage.
-//        }
+        for(WebSocketSession session : memberSession){
+              session.sendMessage(textMessage);
+              //Send a WebSocket message: either TextMessage or BinaryMessage.
+        }
     }
     */
 }
