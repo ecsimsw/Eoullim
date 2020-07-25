@@ -25,13 +25,12 @@ public class Member {
 
     // 여기도 org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role:
     // fetch.EAGER를 안넣어주면 다 에러가 나네,,
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Chat> chats = new ArrayList<>();
 
-    @Transactional
     public void addChat(Chat chat){
-        chat.setMember(this);
         chats.add(chat);
+        chat.setMember(this);
     }
 
     public void removeChat(Chat chat){

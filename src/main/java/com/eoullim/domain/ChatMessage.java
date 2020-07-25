@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="chat_message")
@@ -13,7 +14,7 @@ public class ChatMessage {
     @Column(name="chat_message_id")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Member sender;
 
     private String message;
@@ -21,5 +22,7 @@ public class ChatMessage {
     @Enumerated(EnumType.STRING)
     private MessageType type;
 
-    private String date;
+    LocalDateTime date;
+
+    private Long roomHash;
 }

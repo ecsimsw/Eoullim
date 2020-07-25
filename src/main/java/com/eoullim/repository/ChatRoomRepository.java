@@ -51,6 +51,7 @@ public class ChatRoomRepository {
     public void deleteByRoomHash(Long roomHash){
         ChatRoom deleteOne = this.findByRoomHash(roomHash);
         em.remove(deleteOne);
+        //em.merge(deleteOne);
     }
 
     /*

@@ -33,6 +33,7 @@
 <tr th:each="chat : ${room.chats}">
     <td th:text="${chat.member.name}"></td>
 </tr>
+<div id ="newMember"></div>
 
 <div id = "chatroom" style = "width:400px; height: 600px; border:1px solid;"></div>
 <input type = "text" id = "message" style = "height : 30px; width : 340px" placeholder="내용을 입력하세요" autofocus>
@@ -49,25 +50,32 @@
     var sender = /*[[${session.loginMember.loginId}]]*/;
     /* ]]> */
     
-    
-    alert(sender);
+   
     connect();
     
     document.getElementById("send").addEventListener("click",function(){
-        alert(sender);
         send();
     })
     document.getElementById("message").addEventListener("keypress", function(e){
 		if(e.keyCode == 13){
 			send();
 		}
-	});
+	})
 
-
+    document.getElementById("exit").addEventListener("click",function(){
+        disconnect();
+        location.replace("/chat/rooms");
+    })
+    
     function connect(){
         webSocket = new WebSocket("ws://localhost:8080/eoullimChatServer");
         webSocket.onopen = onOpen;
+        webSocket.onclose = onClose;
         webSocket.onmessage = onMessage;
+    }
+    function disconnect(){
+        webSocket.send(JSON.stringify({roomHash : roomHash,type:'LEAVE',sender:sender,message : ""}));
+        webSocket.close();
     }
     function send(){
         msg = document.getElementById("message").value;
@@ -75,6 +83,7 @@
         document.getElementById("message").value = "";
     }
     function onOpen(){
+        document.getElementById("newMember").innerText += sender;
         webSocket.send(JSON.stringify({roomHash : roomHash,type:'ENTER',sender:sender, message : ""}));
     }
     function onMessage(e){
@@ -83,6 +92,9 @@
         chatroom.innerHTML = chatroom.innerHTML + "<br>" + data;
 
         // data 형식 -> "sender : message"
+    }
+    function onClose(){
+        disconnect();
     }
 </script>
 

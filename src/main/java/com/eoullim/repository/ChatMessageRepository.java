@@ -21,10 +21,10 @@ public class ChatMessageRepository {
         return em.find(ChatMessage.class, id);
     }
 
-    public List<ChatMessage> getMessagesInRoom(Long roomId){
+    public List<ChatMessage> getMessagesInRoom(Long roomHash){
         List<ChatMessage> messages =
-                em.createQuery("Select m from ChatMessage m where m.roomId= :roomId", ChatMessage.class)
-                        .setParameter("roomId", roomId)
+                em.createQuery("Select m from ChatMessage m where m.roomHash= :roomHash", ChatMessage.class)
+                        .setParameter("roomHash", roomHash)
                         .getResultList();
         return messages;
     }

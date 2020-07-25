@@ -16,4 +16,7 @@ public class ChatRepository {
     public void save(Chat chat){
         em.persist(chat);
     }
+
+    public void delete(Chat chat){em.merge(chat);}
+
 }

@@ -5,6 +5,7 @@ import com.eoullim.repository.ChatMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,5 +16,9 @@ public class ChatMessageService {
     @Transactional
     public void save(ChatMessage chatMessage){
         chatMessageRepository.save(chatMessage);
+    }
+
+    public List<ChatMessage> loadMessages(Long roomHash){
+        return chatMessageRepository.getMessagesInRoom(roomHash);
     }
 }

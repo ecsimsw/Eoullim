@@ -41,25 +41,8 @@ public class ChatRoomService {
         return chatRoomRepository.findByRoomHash(hashId);
     }
 
-   /*
-    public ChatRoom getChatRoomById(Long roomId){
-        return chatRoomRepository.findRoomById(roomId);
+    @Transactional
+    public void deleteChatRoomByHashId(Long hashId){
+        chatRoomRepository.deleteByRoomHash(hashId);
     }
-
-
-    public void sendMessage(WebSocketSession session, TextMessage message) throws IOException {
-        String msg = message.getPayload();
-        ChatMessage chatMessage = objMapper.readValue(msg, ChatMessage.class);
-
-        Long roomId = chatMessage.getRoomId();
-        ChatRoom chatRoom = chatRoomRepository.findRoomById(roomId);
-
-        if(chatRoom.handleMessage(session,chatMessage, objMapper) == -1)
-            deleteChatRoom(roomId);
-    }
-
-    public void deleteChatRoom(Long roomId){
-        chatRoomRepository.delete(roomId);
-    }
-    */
 }

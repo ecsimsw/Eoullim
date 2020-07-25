@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -22,11 +24,28 @@ public class ChatService {
     @Transactional
     public void createChat(Member member, ChatRoom chatRoom){
         Chat newChat = new Chat();
-        newChat.setChatRoom(chatRoom);
-        newChat.setMember(member);
 
         member.addChat(newChat);
         chatRoom.addChat(newChat);
+
         chatRepository.save(newChat);
+    }
+
+    public String leftMember(ChatRoom chatRoom, Member member){
+        String testLine ="left none";
+
+        Iterator iterator = chatRoom.getChats().iterator();
+        while(iterator.hasNext()){
+            Chat c = (Chat)iterator.next();
+            if(c.getMember().getName().equals(member.getName())){
+                testLine = "left : "+member.getName();
+
+                c.getMember().removeChat(c);
+                chatRepository.delete(c);
+                iterator.remove();
+            }
+        }
+
+        return testLine;
     }
 }
