@@ -101,9 +101,9 @@ public class MainController {
         return "redirect:/chat/rooms";
     }
 
-    @GetMapping("/chat/room/{id}")
-    public String enterChatRoom(@PathVariable String id, Model model){
-        ChatRoom room = chatRoomService.getChatRoomByHashId(Long.parseLong(id));
+    @GetMapping("/chat/room/{roomHash}")
+    public String enterChatRoom(@PathVariable String roomHash, Model model){
+        ChatRoom room = chatRoomService.getChatRoomByHashId(Long.parseLong(roomHash));
         model.addAttribute("room",room);
         return "test/chat/room";
     }

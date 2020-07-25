@@ -3,6 +3,7 @@ package com.eoullim.domain;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -23,10 +24,12 @@ public class ChatRoom {
     private Long roomHash;
     private String name;
 
-    @OneToMany(mappedBy = "chatRoom",cascade = CascadeType.ALL)
+    // org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role -> Fetch 설정안했을 시
+    @OneToMany(mappedBy = "chatRoom",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Chat> chats = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    // org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role -> Fetch 설정안했을 시
+    @OneToMany(cascade = CascadeType.ALL)  // 왜 Fetch 설정 안하면 에러가 나지
     @JoinColumn(name="chat_room_id")
     private List<ChatMessage> chatMessages = new ArrayList<>();
 

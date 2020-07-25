@@ -2,6 +2,7 @@ package com.eoullim.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.persistence.*;
@@ -22,9 +23,12 @@ public class Member {
     private String loginId;
     private String loginPw;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    // 여기도 org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role:
+    // fetch.EAGER를 안넣어주면 다 에러가 나네,,
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Chat> chats = new ArrayList<>();
 
+    @Transactional
     public void addChat(Chat chat){
         chat.setMember(this);
         chats.add(chat);

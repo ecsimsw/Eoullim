@@ -20,7 +20,7 @@ public class ChatService {
     }
 
     @Transactional
-    public void enterChatRoom(Member member, ChatRoom chatRoom){
+    public void createChat(Member member, ChatRoom chatRoom){
         Chat newChat = new Chat();
         newChat.setChatRoom(chatRoom);
         newChat.setMember(member);

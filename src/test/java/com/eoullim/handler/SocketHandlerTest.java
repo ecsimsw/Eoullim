@@ -1,12 +1,10 @@
 package com.eoullim.handler;
 
-import com.eoullim.Application;
 import com.eoullim.domain.ChatMessage;
 import com.eoullim.domain.ChatRoom;
 import com.eoullim.domain.Member;
 import com.eoullim.domain.MessageType;
 import com.eoullim.form.MessageForm;
-import com.eoullim.repository.EntityMappingTest;
 import com.eoullim.service.ChatMessageService;
 import com.eoullim.service.ChatRoomService;
 import com.eoullim.service.ChatService;
@@ -21,9 +19,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.sockjs.client.WebSocketClientSockJsSession;
-
-import static org.junit.Assert.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -65,7 +60,7 @@ public class SocketHandlerTest {
         if(chatMessage.getType() == MessageType.ENTER){
             sender.setWebSocketSession(session);
             chatMessage.setMessage("Entered : "+chatMessage.getSender());
-            chatService.enterChatRoom(sender, chatRoom);
+            chatService.createChat(sender, chatRoom);
             logger.info("4");
         }
     }

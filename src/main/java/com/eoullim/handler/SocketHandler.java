@@ -33,40 +33,31 @@ public class SocketHandler extends TextWebSocketHandler {
 
         String msg = message.getPayload();
         MessageForm messageForm = objectMapper.readValue(msg, MessageForm.class);
-        log.info("0");
         handleMessageForm(session, messageForm);
-
-        //if(this.handleMessageForm(session,messageForm) == -1)
-        //    deleteChatRoom(roomId);
-        //chatRoomService.sendMessage(session, message);
     }
 
     private int handleMessageForm(WebSocketSession session, MessageForm messageForm) throws IOException {
         int roomStatus = 0;  // -1 : End Room
 
-        Member sender = memberService.getMemberByLoginId(messageForm.getSenderLoginId());
-        log.info("1");
+        Member sender = memberService.getMemberByLoginId(messageForm.getSender());
+        log.info(messageForm.getSender());
+
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSender(sender);
         chatMessage.setType(messageForm.getType());
         chatMessage.setMessage(messageForm.getMessage());
         chatMessageService.save(chatMessage);
-        log.info("2");
+
         Long roomHash = messageForm.getRoomHash();
-        log.info("3");
+
         ChatRoom chatRoom = chatRoomService.getChatRoomByHashId(roomHash);
 
-        log.info("3-3");
-        chatRoom.addChatMessage(chatMessage);
-        log.info("3-4");
         if(chatMessage.getType() == MessageType.ENTER){
             sender.setWebSocketSession(session);
-            chatMessage.setMessage("Entered : "+chatMessage.getSender());
+            chatMessage.setMessage("Entered : "+chatMessage.getSender().getName());
 
-            log.info(sender.getWebSocketSession().toString());
-            log.info(session.toString());
+            chatService.createChat(sender, chatRoom);
 
-            chatService.enterChatRoom(sender, chatRoom);
         }
         else if(chatMessage.getType() == MessageType.LEAVE) {
             chatMessage.setMessage("Left : " + chatMessage.getSender());
@@ -84,9 +75,19 @@ public class SocketHandler extends TextWebSocketHandler {
     private void send(ChatRoom chatRoom, ChatMessage chatMessage) throws IOException {
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
 
+        //log.info(chatRoom.getChats().toString());
+        //log.info(chatMessage.getSender().toString());
+
+        log.info(chatRoom.getRoomHash().toString());
+        log.info(String.valueOf(chatRoom.getChats().size()));
         for(Chat chat : chatRoom.getChats()){
+            log.info("chat : "+chat.toString());
+            log.info("member : "+chat.getMember().getName());
             WebSocketSession session = chat.getMember().getWebSocketSession();
+            log.info("session : "+session.toString());
+            log.info("msg : "+textMessage);
             session.sendMessage(textMessage);
+
             //Send a WebSocket message: either TextMessage or BinaryMessage.
         }
     }

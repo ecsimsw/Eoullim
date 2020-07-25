@@ -1,5 +1,6 @@
 package com.eoullim.repository;
 
+import com.eoullim.domain.Chat;
 import com.eoullim.domain.ChatMessage;
 import com.eoullim.domain.ChatRoom;
 import lombok.RequiredArgsConstructor;

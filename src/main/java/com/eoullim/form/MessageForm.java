@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class MessageForm {
-    private String senderLoginId;
+    private String sender; // loginId
     private Long roomHash;
     private String message;
     private MessageType type;
