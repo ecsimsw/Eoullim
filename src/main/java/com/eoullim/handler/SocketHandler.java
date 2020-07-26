@@ -16,6 +16,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transaction;
 import java.io.IOException;
 import java.util.*;
 
@@ -41,15 +42,6 @@ public class SocketHandler extends TextWebSocketHandler {
 
         String msg = message.getPayload();
         MessageForm messageForm = objectMapper.readValue(msg, MessageForm.class);
-
-        /*
-        // mock
-        session = null;
-        messageForm.setMessage("ENTER_test");
-        messageForm.setRoomHash(20200726000858L);
-        messageForm.setType(MessageType.ENTER);
-        messageForm.setSender("a");
-         */
 
         handleMessageForm(session, messageForm);
     }
@@ -97,15 +89,24 @@ public class SocketHandler extends TextWebSocketHandler {
         else if(msgType == MessageType.LEAVE) {
             msgContent = "Left : " + sender.getName();
             Member leftOne = memberService.getMemberByLoginId(sender.getLoginId());
-            sessionMap.remove(leftOne);
+            sessionMap.remove(leftOne.getLoginId());
 
-            String result = chatRoomService.exitMember(chatRoom, leftOne);
-            log.info(result);
-            log.info("left Member : "+String.valueOf(chatRoom.getChats().size()));
+            chatRoomService.exitMember(chatRoom, leftOne);
+
+            for(Chat c : chatRoom.getChats()){
+                log.info("left chat 1 : "+c.getMember().getLoginId());
+            }
+            chatRoomService.updateChatRoom(chatRoom);
+
+            chatRoom = chatRoomService.getChatRoomById(chatRoom.getId());
+            for(Chat c : chatRoom.getChats()){
+                log.info("left chat 2 : "+c.getMember().getLoginId());
+            }
             log.info("session count : "+String.valueOf(sessionMap.size()));
             if (chatRoom.getChats().size() < 1) {
                 chatRoomService.deleteChatRoomByHashId(roomHash);
                 roomStatus =-1;
+                return roomStatus;
             }
         }
         else if(msgType == MessageType.CHAT){
@@ -123,6 +124,14 @@ public class SocketHandler extends TextWebSocketHandler {
         log.info("chatRoomHash : "+chatRoom.getRoomHash().toString());
 
         for(Chat chat : chatRoom.getChats()){
+            WebSocketSession session = sessionMap.get(chat.getMember().getLoginId());
+            session.sendMessage(textMessage); //send socket message: either TextMessage or BinaryMessage.
+            log.info("to -> "+ chat.getMember().getLoginId());
+        }
+
+
+        /*
+        for(Chat chat : chatRoom.getChats()){
             //WebSocketSession session = chat.getMember().getWebSocketSession();
             memberInChatRoom.add(chat.getMember().getLoginId());
         }
@@ -131,6 +140,8 @@ public class SocketHandler extends TextWebSocketHandler {
             WebSocketSession session = sessionMap.get(memberLoginId);
             session.sendMessage(textMessage); //send socket message: either TextMessage or BinaryMessage.
         }
+         */
+        log.info("end send");
     }
 
     private void sendToOne(ChatMessage chatMessage, String loginId) throws IOException {

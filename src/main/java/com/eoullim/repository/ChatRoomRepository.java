@@ -17,6 +17,14 @@ public class ChatRoomRepository {
 
     private final EntityManager em;
 
+    public void save(ChatRoom chatRoom){
+        if(chatRoom.getId()==null){
+            em.persist(chatRoom);
+        }
+        else{
+            em.merge(chatRoom);
+        }
+    }
     public ChatRoom saveNewRoom(String name){
         ChatRoom newChatRoom = ChatRoom.create(name);
         em.persist(newChatRoom);

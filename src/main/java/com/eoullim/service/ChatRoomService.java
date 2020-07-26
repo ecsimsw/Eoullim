@@ -28,7 +28,6 @@ public class ChatRoomService {
     public void deleteMessagesInRoom(Long roomId){
 
     }
-
     @Transactional
     public ChatRoom createChatRoom(String name){
         return chatRoomRepository.saveNewRoom(name);
@@ -42,6 +41,12 @@ public class ChatRoomService {
 
     public ChatRoom getChatRoomByHashId(Long hashId){
         return chatRoomRepository.findByRoomHash(hashId);
+    }
+    public ChatRoom getChatRoomById(Long id){ return chatRoomRepository.findById(id); }
+
+    @Transactional
+    public void updateChatRoom(ChatRoom chatRoom){
+        chatRoomRepository.save(chatRoom);
     }
 
     @Transactional
@@ -65,18 +70,17 @@ public class ChatRoomService {
         while(iterator.hasNext()){
             Chat chat = (Chat)iterator.next();
             if(chat.getMember().getName().equals(member.getName())){
-                testLine = "left : "+member.getName();
+                testLine = "EXIT : "+member.getName();
 
                 chat.getMember().removeChat(chat);
                 chat.setMember(null);
-                //chat.getChatRoom().removeChat(chat);
-                //chat.setChatRoom(null);
-
+                chat.setChatRoom(null);
+                //chatRepository.save(chat);
                 chatRepository.delete(chat);
                 iterator.remove();
             }
         }
-
+        //chatRoomRepository.save(chatRoom);
         return testLine;
     }
 }
