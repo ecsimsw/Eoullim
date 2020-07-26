@@ -2,6 +2,7 @@ package com.eoullim.repository;
 
 import com.eoullim.domain.Chat;
 import com.eoullim.domain.ChatMessage;
+import com.eoullim.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,10 @@ public class ChatRepository {
         em.persist(chat);
     }
 
-    public void delete(Chat chat){em.merge(chat);}
+    public void delete(Chat chat){
+        Chat delete = em.find(Chat.class, chat.getId());
+        em.remove(delete);
+        //em.merge(chat);}
+    }
 
 }

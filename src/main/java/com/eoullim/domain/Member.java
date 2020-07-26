@@ -38,7 +38,8 @@ public class Member {
     }
 
 
-    //Transient
+    /*Transient
     @Transient
     WebSocketSession webSocketSession;
+     */
 }

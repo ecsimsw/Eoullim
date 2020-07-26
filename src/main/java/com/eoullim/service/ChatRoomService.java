@@ -2,6 +2,7 @@ package com.eoullim.service;
 
 import com.eoullim.domain.*;
 import com.eoullim.repository.ChatMessageRepository;
+import com.eoullim.repository.ChatRepository;
 import com.eoullim.repository.ChatRoomRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 @Slf4j
@@ -21,6 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatRepository chatRepository;
 
     public void deleteMessagesInRoom(Long roomId){
 
@@ -43,6 +46,37 @@ public class ChatRoomService {
 
     @Transactional
     public void deleteChatRoomByHashId(Long hashId){
+        ChatRoom deleteOne = chatRoomRepository.findByRoomHash(hashId);
+        for(Chat chat : deleteOne.getChats()){
+            chat.setMember(null);
+            chat.setChatRoom(null);
+            chatRepository.delete(chat);
+        }
+        deleteOne.setChats(null);
+
         chatRoomRepository.deleteByRoomHash(hashId);
+    }
+
+    @Transactional
+    public String exitMember(ChatRoom chatRoom, Member member){
+        String testLine ="left none";
+
+        Iterator iterator = chatRoom.getChats().iterator();
+        while(iterator.hasNext()){
+            Chat chat = (Chat)iterator.next();
+            if(chat.getMember().getName().equals(member.getName())){
+                testLine = "left : "+member.getName();
+
+                chat.getMember().removeChat(chat);
+                chat.setMember(null);
+                //chat.getChatRoom().removeChat(chat);
+                //chat.setChatRoom(null);
+
+                chatRepository.delete(chat);
+                iterator.remove();
+            }
+        }
+
+        return testLine;
     }
 }

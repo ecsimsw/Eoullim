@@ -31,21 +31,5 @@ public class ChatService {
         chatRepository.save(newChat);
     }
 
-    public String leftMember(ChatRoom chatRoom, Member member){
-        String testLine ="left none";
 
-        Iterator iterator = chatRoom.getChats().iterator();
-        while(iterator.hasNext()){
-            Chat c = (Chat)iterator.next();
-            if(c.getMember().getName().equals(member.getName())){
-                testLine = "left : "+member.getName();
-
-                c.getMember().removeChat(c);
-                chatRepository.delete(c);
-                iterator.remove();
-            }
-        }
-
-        return testLine;
-    }
 }

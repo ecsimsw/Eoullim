@@ -1,4 +1,4 @@
-package com.eoullim.handler;
+package com.eoullim.back_0726;
 
 import com.eoullim.domain.*;
 import com.eoullim.form.MessageForm;
@@ -22,7 +22,7 @@ import java.util.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SocketHandler extends TextWebSocketHandler {
+public class SocketHandlerBack extends TextWebSocketHandler {
     private final ChatRoomService chatRoomService;
     private final ObjectMapper objectMapper;
     private final MemberService memberService;
@@ -101,8 +101,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
             String result = chatRoomService.exitMember(chatRoom, leftOne);
             log.info(result);
-            log.info("left Member : "+String.valueOf(chatRoom.getChats().size()));
-            log.info("session count : "+String.valueOf(sessionMap.size()));
+            log.info(String.valueOf(chatRoom.getChats().size()));
             if (chatRoom.getChats().size() < 1) {
                 chatRoomService.deleteChatRoomByHashId(roomHash);
                 roomStatus =-1;
