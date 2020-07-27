@@ -36,4 +36,8 @@ public class ChatMessageService {
         return chatMessageRepository.getMessagesInRoom(roomHash);
     }
 
+    @Transactional
+    public void deleteAllInRoom(Long roomHash){
+        chatMessageRepository.delteInRoom(roomHash);
+    }
 }

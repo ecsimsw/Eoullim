@@ -67,6 +67,14 @@
         location.replace("/chat/rooms");
     })
     
+    history.pushState(null, null, location.href);
+	window.onpopstate = function(event){
+		 msg = document.getElementById("message").value;
+	     webSocket.send(JSON.stringify({roomId : roomId, type:'STEPOUT', sender:nickname, message : msg}));
+	     document.getElementById("message").value = "";
+	}
+    
+    
     function connect(){
         webSocket = new WebSocket("ws://localhost:8080/eoullimChatServer");
         webSocket.onopen = onOpen;

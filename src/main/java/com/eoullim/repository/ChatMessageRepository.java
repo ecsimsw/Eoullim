@@ -33,6 +33,12 @@ public class ChatMessageRepository {
         em.remove(findById(id));
     }
 
+    public void delteInRoom(Long roomHash){
+        em.createQuery("Delete from ChatMessage m where m.roomHash= :roomHash")
+                .setParameter("roomHash", roomHash)
+                .executeUpdate();
+    }
+
     //public List<ChatMessage> findMessagesByRoomId(Long roomId){}
 
 }

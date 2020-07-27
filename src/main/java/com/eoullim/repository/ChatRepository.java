@@ -20,8 +20,7 @@ public class ChatRepository {
 
     public void delete(Chat chat){
         Chat delete = em.find(Chat.class, chat.getId());
-        //em.remove(delete);
-        em.merge(delete);
+        em.remove(delete);
     }
 
     public Chat find(Long id){

@@ -30,11 +30,7 @@ public class SocketHandler extends TextWebSocketHandler {
     private final ChatMessageService chatMessageService;
     private final ChatService chatService;
 
-    private final StringBuilder sb = new StringBuilder();
-    private final EntityManager em;
-
     private Map<String, WebSocketSession> sessionMap = new HashMap<>();
-    private Set<String> memberInChatRoom = new HashSet<>();
 
     // TextMessage -> JSON {roomHash : "roomHashId", type : "TYPE", sender : "loginId", message:"content "}
     @Override
@@ -46,7 +42,6 @@ public class SocketHandler extends TextWebSocketHandler {
         handleMessageForm(session, messageForm);
     }
 
-    @Transactional
     private int handleMessageForm(WebSocketSession session, MessageForm messageForm) throws IOException {
         int roomStatus = 0;  // -1 : End Room
 
@@ -60,7 +55,6 @@ public class SocketHandler extends TextWebSocketHandler {
         // chatRoom.addChatMessage(chatMessage);
 
         if(msgType== MessageType.ENTER){
-
             // 현재 세션 맵에 (senderLoginId, session) 형태로 저장
             sessionMap.put(sender.getLoginId(),session);
             //sender.setWebSocketSession(session);
@@ -72,43 +66,41 @@ public class SocketHandler extends TextWebSocketHandler {
                 sendToOne(message, sender.getLoginId());
             }
 
-            /*
-            // 같은 채팅 방 참여자 중복 제거
-            Iterator iterator = chatRoom.getChats().iterator();
-            while(iterator.hasNext()){
-                Chat chatInRoom = (Chat)iterator.next();
-                if(chatInRoom.getMember().getLoginId().equals(sender.getLoginId())){
-                    iterator.remove();
-                }
+            // 다른 방에 들어갔다가 나온건지, 아예 채팅방을 나갔다가 들어왔는지 구분해야함.
+            if(!chatRoomService.isExist(chatRoom, sender.getId())){
+                msgContent = "Entered : "+sender.getName();
+                chatService.createChat(sender, chatRoom);
             }
-            */
-
-            msgContent = "Entered : "+sender.getName();
-            chatService.createChat(sender, chatRoom);
+            else{
+                log.info("Already in this room. This must be error in going back");
+            }
         }
-        else if(msgType == MessageType.LEAVE) {
+
+        else if(msgType == MessageType.LEAVE) {    //방을 아예 나간 경우
             msgContent = "Left : " + sender.getName();
             Member leftOne = memberService.getMemberByLoginId(sender.getLoginId());
             sessionMap.remove(leftOne.getLoginId());
 
-            chatRoomService.exitMember(chatRoom, leftOne);
+            chatRoom = chatRoomService.exitMember(chatRoom, leftOne);
 
-            for(Chat c : chatRoom.getChats()){
-                log.info("left chat 1 : "+c.getMember().getLoginId());
-            }
-            chatRoomService.updateChatRoom(chatRoom);
+            log.info("left chat count : "+chatRoom.getChats().size());
+            log.info("left session count : "+sessionMap.size());
 
-            chatRoom = chatRoomService.getChatRoomById(chatRoom.getId());
-            for(Chat c : chatRoom.getChats()){
-                log.info("left chat 2 : "+c.getMember().getLoginId());
-            }
-            log.info("session count : "+String.valueOf(sessionMap.size()));
             if (chatRoom.getChats().size() < 1) {
                 chatRoomService.deleteChatRoomByHashId(roomHash);
+                chatMessageService.deleteAllInRoom(roomHash);
+                log.info("delete room data and messages in room");
                 roomStatus =-1;
                 return roomStatus;
             }
         }
+
+        // 브라우저에서 뒤로가기를 누르면 STEPOUT message를 전송한다. ( 잠깐 다른 방에 간 경우 )
+        else if(msgType == MessageType.STEPOUT){
+            Member leftOne = memberService.getMemberByLoginId(sender.getLoginId());
+            sessionMap.remove(leftOne.getLoginId());
+        }
+
         else if(msgType == MessageType.CHAT){
             msgContent = sender.getName() + " : " + msgContent;
         }
@@ -125,29 +117,20 @@ public class SocketHandler extends TextWebSocketHandler {
 
         for(Chat chat : chatRoom.getChats()){
             WebSocketSession session = sessionMap.get(chat.getMember().getLoginId());
-            session.sendMessage(textMessage); //send socket message: either TextMessage or BinaryMessage.
-            log.info("to -> "+ chat.getMember().getLoginId());
-        }
 
-
-        /*
-        for(Chat chat : chatRoom.getChats()){
-            //WebSocketSession session = chat.getMember().getWebSocketSession();
-            memberInChatRoom.add(chat.getMember().getLoginId());
+            if(session != null){
+                session.sendMessage(textMessage);
+                log.info("to -> "+ chat.getMember().getLoginId());
+            }
+            else{ log.info("==== web socket session is null ==="); }
         }
-
-        for(String memberLoginId : memberInChatRoom){
-            WebSocketSession session = sessionMap.get(memberLoginId);
-            session.sendMessage(textMessage); //send socket message: either TextMessage or BinaryMessage.
-        }
-         */
-        log.info("end send");
+        log.info("sent successfully");
     }
 
     private void sendToOne(ChatMessage chatMessage, String loginId) throws IOException {
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
         WebSocketSession session = sessionMap.get(loginId);
-        session.sendMessage(textMessage); //send socket message: either TextMessage or BinaryMessage.
+        session.sendMessage(textMessage);
     }
 
 }

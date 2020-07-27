@@ -25,9 +25,6 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRepository chatRepository;
 
-    public void deleteMessagesInRoom(Long roomId){
-
-    }
     @Transactional
     public ChatRoom createChatRoom(String name){
         return chatRoomRepository.saveNewRoom(name);
@@ -41,12 +38,6 @@ public class ChatRoomService {
 
     public ChatRoom getChatRoomByHashId(Long hashId){
         return chatRoomRepository.findByRoomHash(hashId);
-    }
-    public ChatRoom getChatRoomById(Long id){ return chatRoomRepository.findById(id); }
-
-    @Transactional
-    public void updateChatRoom(ChatRoom chatRoom){
-        chatRoomRepository.save(chatRoom);
     }
 
     @Transactional
@@ -63,24 +54,31 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public String exitMember(ChatRoom chatRoom, Member member){
-        String testLine ="left none";
+    public ChatRoom exitMember(ChatRoom chatRoom, Member member){
+
+        chatRoom = chatRoomRepository.findByRoomHash(chatRoom.getRoomHash());
 
         Iterator iterator = chatRoom.getChats().iterator();
         while(iterator.hasNext()){
             Chat chat = (Chat)iterator.next();
             if(chat.getMember().getName().equals(member.getName())){
-                testLine = "EXIT : "+member.getName();
 
                 chat.getMember().removeChat(chat);
                 chat.setMember(null);
                 chat.setChatRoom(null);
-                //chatRepository.save(chat);
                 chatRepository.delete(chat);
                 iterator.remove();
             }
         }
-        //chatRoomRepository.save(chatRoom);
-        return testLine;
+        return chatRoom;
+    }
+
+    public boolean isExist(ChatRoom chatRoom, Long memberId){
+        for(Chat chat : chatRoom.getChats()){
+            if(chat.getMember().getId() == memberId)
+                return true;
+        }
+
+        return false;
     }
 }

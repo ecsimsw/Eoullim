@@ -99,8 +99,8 @@ public class SocketHandlerBack extends TextWebSocketHandler {
             Member leftOne = memberService.getMemberByLoginId(sender.getLoginId());
             sessionMap.remove(leftOne);
 
-            String result = chatRoomService.exitMember(chatRoom, leftOne);
-            log.info(result);
+            chatRoomService.exitMember(chatRoom, leftOne);
+
             log.info(String.valueOf(chatRoom.getChats().size()));
             if (chatRoom.getChats().size() < 1) {
                 chatRoomService.deleteChatRoomByHashId(roomHash);
