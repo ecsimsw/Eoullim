@@ -45,19 +45,17 @@ public class EntityMappingTest {
         msg1.setMessage("입장입니다.");
         msg1.setSender(testMember);
         chatMessageRepository.save(msg1);
-        testChatRoom.addChatMessage(msg1);
 
         ChatMessage msg2 = new ChatMessage();
         msg2.setMessage("test입니다.");
         msg2.setSender(testMember);
         chatMessageRepository.save(msg2);
-        testChatRoom.addChatMessage(msg2);
 
         ChatRoom findRoom = chatRoomRepository.findById(testChatRoom.getId());
 
         Assertions.assertThat(findRoom).isEqualTo(testChatRoom);
         Assertions.assertThat(findRoom.getChats().size()).isEqualTo(testChatRoom.getChats().size());
-        logger.info(String.valueOf(findRoom.getChatMessages().size()));
+
 
     }
 

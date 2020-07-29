@@ -4,6 +4,7 @@ import com.eoullim.domain.Member;
 import com.eoullim.form.JoinForm;
 import com.eoullim.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Member loginCheck(String loginId, String loginPw){
         Member member = memberRepository.findByLoginId(loginId);
@@ -30,6 +32,7 @@ public class MemberService {
         Member newMember = new Member();
         newMember.setName(joinForm.getName());
         newMember.setLoginId(joinForm.getLoginId());
+
         newMember.setLoginPw(joinForm.getLoginPw());
         newMember.setEmail(joinForm.getEmail());
 
