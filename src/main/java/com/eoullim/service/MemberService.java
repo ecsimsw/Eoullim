@@ -32,9 +32,9 @@ public class MemberService {
         Member newMember = new Member();
         newMember.setName(joinForm.getName());
         newMember.setLoginId(joinForm.getLoginId());
-
         newMember.setLoginPw(joinForm.getLoginPw());
         newMember.setEmail(joinForm.getEmail());
+        newMember.setGender(joinForm.getGender());
 
         memberRepository.save(newMember);
         return newMember;

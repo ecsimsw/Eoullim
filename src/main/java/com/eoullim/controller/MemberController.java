@@ -7,12 +7,14 @@ import com.eoullim.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
@@ -55,12 +57,12 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String join(@ModelAttribute JoinForm form, HttpServletRequest request){
-        Member result = memberService.join(form);
+    public String join(@ModelAttribute JoinForm form,  HttpServletRequest request){
+        Member joinResult = memberService.join(form);
 
-        if(result!=null) { // join and login
+        if(joinResult!=null) { // join and login
             HttpSession session = request.getSession();
-            session.setAttribute("loginMember", result);
+            session.setAttribute("loginMember", joinResult);
             return "redirect:/chat/rooms";
         }
         else {return "redirect:/ERROR";} // 이미 존재하는 id

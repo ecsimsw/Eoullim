@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +18,11 @@ public class Member {
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
-
     private String name;
     private String email;
     private String loginId;
     private String loginPw;
+    private String gender;
 
     // 여기도 org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role:
     // fetch.EAGER를 안넣어주면 다 에러가 나네,,
@@ -37,9 +38,4 @@ public class Member {
         chats.remove(chat);
     }
 
-
-    /*Transient
-    @Transient
-    WebSocketSession webSocketSession;
-     */
 }
