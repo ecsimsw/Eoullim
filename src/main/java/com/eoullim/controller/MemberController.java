@@ -3,6 +3,8 @@ package com.eoullim.controller;
 import com.eoullim.domain.Member;
 import com.eoullim.form.JoinForm;
 import com.eoullim.form.LoginForm;
+import com.eoullim.message.EjoinMessage;
+import com.eoullim.message.EloginMessage;
 import com.eoullim.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,7 +25,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-
     @GetMapping("/login")
     public String loginPage(Model model){
         model.addAttribute("form",new LoginForm());
@@ -30,18 +32,17 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String loginCheck(@ModelAttribute LoginForm form, HttpServletRequest request){
-        String id = form.getId();
-        String pw = form.getPw();
+    @ResponseBody
+    public EloginMessage loginCheck(@ModelAttribute LoginForm form, HttpSession session){
+        String loginId = form.getId();
+        String loginPw = form.getPw();
 
-        Member result = memberService.loginCheck(id, pw);
+        EloginMessage result = memberService.loginCheck(loginId, loginPw);
 
-        if(result!=null) { // login
-            HttpSession session = request.getSession();
-            session.setAttribute("loginMember", result);
-            return "redirect:/main";
+        if(result==EloginMessage.success) { // login
+            session.setAttribute("loginMember", loginId);
         }
-        else {return "test/ERROR";}  // 없는 id 또는 pw 불일치
+        return result;
     }
 
     @GetMapping("/logout")
@@ -57,14 +58,13 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String join(@ModelAttribute JoinForm form,  HttpServletRequest request){
-        Member joinResult = memberService.join(form);
+    @ResponseBody
+    public EjoinMessage join(@ModelAttribute JoinForm form,  HttpSession session){
+        EjoinMessage joinResult = memberService.join(form);
 
-        if(joinResult!=null) { // join and login
-            HttpSession session = request.getSession();
-            session.setAttribute("loginMember", joinResult);
-            return "redirect:/chat/rooms";
+        if(joinResult==EjoinMessage.success) {
+            session.setAttribute("loginMember", form.getLoginId());
         }
-        else {return "redirect:/ERROR";} // 이미 존재하는 id
+        return joinResult;
     }
 }

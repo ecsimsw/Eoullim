@@ -31,4 +31,17 @@ public class MemberRepository {
 
         else{ return null; }
     }
+
+    public Member findByEmail(String email){
+        List<Member> member = em.createQuery("select m from Member m where m.email = :email", Member.class)
+                .setParameter("email", email)
+                .getResultList();
+
+        if(member != null){
+            if(member.size()>0) return member.get(0); // loginId는 안겹치도록
+            else return null;
+        }
+
+        else{ return null; }
+    }
 }
