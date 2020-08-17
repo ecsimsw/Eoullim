@@ -1,18 +1,15 @@
 package com.eoullim.service;
 
 import com.eoullim.domain.*;
-import com.eoullim.repository.ChatMessageRepository;
+import com.eoullim.form.ChatRoomForm;
+import com.eoullim.message.EcreateChatRoomMessage;
 import com.eoullim.repository.ChatRepository;
 import com.eoullim.repository.ChatRoomRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -26,8 +23,18 @@ public class ChatRoomService {
     private final ChatRepository chatRepository;
 
     @Transactional
-    public ChatRoom createChatRoom(String name){
-        return chatRoomRepository.saveNewRoom(name);
+    public EcreateChatRoomMessage createChatRoom(ChatRoomForm chatRoomForm, String category){
+        ChatRoom newChatRoom = new ChatRoom();
+        newChatRoom.setWriterLoginId(chatRoomForm.getWriterLoginId());
+        newChatRoom.setRoomTitle(chatRoomForm.getRoomTitle());
+        newChatRoom.setRoomHashId(chatRoomForm.getRoomHashId());
+        newChatRoom.setRoomDescription(chatRoomForm.getRoomDescription());
+        newChatRoom.setLimitPerson(chatRoomForm.getLimitPerson());
+        newChatRoom.setCategory(category);
+
+        chatRoomRepository.saveNewRoom(newChatRoom);
+
+        return EcreateChatRoomMessage.success;
     }
 
     public List<ChatRoom> getAllChatRooms(){
@@ -56,7 +63,7 @@ public class ChatRoomService {
     @Transactional
     public ChatRoom exitMember(ChatRoom chatRoom, Member member){
 
-        chatRoom = chatRoomRepository.findByRoomHash(chatRoom.getRoomHash());
+        chatRoom = chatRoomRepository.findByRoomHash(chatRoom.getRoomHashId());
 
         Iterator iterator = chatRoom.getChats().iterator();
         while(iterator.hasNext()){

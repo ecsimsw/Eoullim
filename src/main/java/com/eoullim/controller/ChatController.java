@@ -2,6 +2,7 @@ package com.eoullim.controller;
 
 import com.eoullim.domain.ChatRoom;
 import com.eoullim.form.ChatRoomForm;
+import com.eoullim.message.EcreateChatRoomMessage;
 import com.eoullim.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,10 +32,11 @@ public class ChatController {
         return "test/chat/newRoom";
     }
 
-    @PostMapping("/chat/rooms/new")
-    public String makeRoom(ChatRoomForm form){
-        chatRoomService.createChatRoom(form.getName());
-        return "redirect:/chat/rooms";
+    @PostMapping("/board/{category}/add")
+    @ResponseBody
+    public EcreateChatRoomMessage makeRoom(ChatRoomForm form, @PathVariable String category){
+        EcreateChatRoomMessage resultMessage = chatRoomService.createChatRoom(form, category);
+        return resultMessage;
     }
 
     @GetMapping("/chat/room/{roomHash}")

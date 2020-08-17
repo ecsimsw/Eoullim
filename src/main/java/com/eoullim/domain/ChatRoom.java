@@ -1,14 +1,9 @@
 package com.eoullim.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -21,27 +16,16 @@ public class ChatRoom {
     @Id @GeneratedValue
     @Column(name ="chat_room_id")
     private Long id;
-    private Long roomHash;
-    private String name;
+    private String roomTitle;
+    private Long roomHashId;
+    private String writerLoginId;
+    private String roomDescription;
+    private int limitPerson;
+    private String category;
 
     // org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role -> Fetch 설정안했을 시
     @OneToMany(mappedBy = "chatRoom",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Chat> chats = new ArrayList<>();
-
-    /* 일단 ChatRoom이랑 ChatMessage 매핑 없앰
-    // org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role -> Fetch 설정안했을 시
-    @OneToMany(cascade = CascadeType.ALL)  // 왜 Fetch 설정 안하면 에러가 나지
-    @JoinColumn(name="chat_room_id")
-    private List<ChatMessage> chatMessages = new ArrayList<>();
-
-    public void addChatMessage(ChatMessage chatMessage){
-        chatMessages.add(chatMessage);
-    }
-
-    public void clearChatMessage(){
-        chatMessages.clear();
-    }
-  */
 
     public void addChat(Chat chat){
         chat.setChatRoom(this);
@@ -64,8 +48,8 @@ public class ChatRoom {
 
     public static ChatRoom create(String name){
         ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomHash = makeRoomHash();
-        chatRoom.name = name;
+        chatRoom.roomHashId = makeRoomHash();
+        chatRoom.roomTitle = name;
         return chatRoom;
     }
 }

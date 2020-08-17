@@ -10,13 +10,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transaction;
 import java.io.IOException;
 import java.util.*;
 
@@ -113,7 +110,7 @@ public class SocketHandler extends TextWebSocketHandler {
     private void sendALL(ChatRoom chatRoom, ChatMessage chatMessage) throws IOException {
         TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(chatMessage.getMessage()));
 
-        log.info("chatRoomHash : "+chatRoom.getRoomHash().toString());
+        log.info("chatRoomHash : "+chatRoom.getRoomHashId().toString());
 
         for(Chat chat : chatRoom.getChats()){
             WebSocketSession session = sessionMap.get(chat.getMember().getLoginId());

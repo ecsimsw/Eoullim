@@ -19,11 +19,11 @@ public class ChatRoomRepositoryTest {
     @Transactional
     @Rollback(false)
     public void saveAndFind() {
-        Long savedRoomHash1 = chatRoomRepository.saveNewRoom("test").getRoomHash();
-        Long savedRoomHash2 = chatRoomRepository.saveNewRoom("test").getRoomHash();
-        Long savedRoomHash3 = chatRoomRepository.saveNewRoom("test").getRoomHash();
+        Long savedRoomHash1 = chatRoomRepository.saveNewRoom("test").getRoomHashId();
+        Long savedRoomHash2 = chatRoomRepository.saveNewRoom("test").getRoomHashId();
+        Long savedRoomHash3 = chatRoomRepository.saveNewRoom("test").getRoomHashId();
 
-        Assertions.assertThat(chatRoomRepository.findByRoomHash(savedRoomHash1).getName()).isEqualTo("test");
+        Assertions.assertThat(chatRoomRepository.findByRoomHash(savedRoomHash1).getRoomTitle()).isEqualTo("test");
 
         Assertions.assertThat(chatRoomRepository.getAllRooms().size()).isEqualTo(3);
 

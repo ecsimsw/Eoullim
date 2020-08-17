@@ -3,6 +3,7 @@ package com.eoullim.repository;
 import com.eoullim.domain.Chat;
 import com.eoullim.domain.ChatMessage;
 import com.eoullim.domain.ChatRoom;
+import com.eoullim.form.ChatRoomForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -25,10 +26,8 @@ public class ChatRoomRepository {
             em.merge(chatRoom);
         }
     }
-    public ChatRoom saveNewRoom(String name){
-        ChatRoom newChatRoom = ChatRoom.create(name);
-        em.persist(newChatRoom);
-        return newChatRoom;
+    public void saveNewRoom(ChatRoom chatRoom){
+        em.persist(chatRoom);
     }
 
     public ChatRoom findById(Long id){
