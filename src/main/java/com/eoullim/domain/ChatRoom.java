@@ -20,7 +20,7 @@ public class ChatRoom {
     private Long roomHashId;
     private String writerLoginId;
     private String roomDescription;
-    private int limitPerson;
+    private Integer limitPerson;
     private String category;
 
     // org.hibernate.LazyInitializationException: failed to lazily initialize a collection of role -> Fetch 설정안했을 시
@@ -36,20 +36,4 @@ public class ChatRoom {
         chats.remove(chat);
     }
 
-    private static Long makeRoomHash(){
-        Long hash =0L;
-        Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat( "yyyyMMddHHmmss", Locale.KOREA );
-        hash += Long.parseLong(formatter.format ( currentTime ));
-        long rand = (long)(Math.random()*100);
-        hash += rand;
-        return hash;
-    }
-
-    public static ChatRoom create(String name){
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomHashId = makeRoomHash();
-        chatRoom.roomTitle = name;
-        return chatRoom;
-    }
 }
